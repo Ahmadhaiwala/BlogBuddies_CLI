@@ -1,0 +1,26 @@
+📦 blogchat-app/
+│
+├── 📁 model/              <-- Data models (POJOs)
+│   ├── User.java
+│   ├── Post.java
+│   ├── Comment.java
+│   ├── Message.java
+│
+├── 📁 service/            <-- Business logic
+│   ├── UserService.java
+│   ├── PostService.java
+│   ├── CommentService.java
+│   ├── ChatService.java
+│
+├── 📁 db/                 <-- DB Simulation or DAO later
+│   ├── Database.java      <-- Simulated in-memory DB now
+│
+├── 📁 util/               <-- Helper classes
+│   ├── InputUtil.java     <-- Scanner + validation
+│   ├── DateTimeUtil.java
+│
+├── 📁 cli/                <-- User interaction logic
+│   ├── MainApp.java
+│   ├── Menu.java
+│
+└── 📄 README.md
