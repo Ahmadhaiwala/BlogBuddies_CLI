@@ -1,26 +1,18 @@
-📦 blogchat-app/
-│
-├── 📁 model/              <-- Data models (POJOs)
+📁 cli/
+│   ├── Launcher.java
+│   ├── UserMenu.java
+│   ├── BlogMenu.java
+│   ├── SocialMenu.java
+|   └── General.java
+📁 db/
+│   └──DBConnection.java
+📁 services/
+│   ├── NotificationServices.java
+│   ├── BlogServices.java
+│   ├── SocialServices.java
+│   └── UserServices.java
+📁 models/
 │   ├── User.java
-│   ├── Post.java
+│   ├── Blog.java
 │   ├── Comment.java
-│   ├── Message.java
-│
-├── 📁 service/            <-- Business logic
-│   ├── UserService.java
-│   ├── PostService.java
-│   ├── CommentService.java
-│   ├── ChatService.java
-│
-├── 📁 db/                 <-- DB Simulation or DAO later
-│   ├── Database.java      <-- Simulated in-memory DB now
-│
-├── 📁 util/               <-- Helper classes
-│   ├── InputUtil.java     <-- Scanner + validation
-│   ├── DateTimeUtil.java
-│
-├── 📁 cli/                <-- User interaction logic
-│   ├── MainApp.java
-│   ├── Menu.java
-│
-└── 📄 README.md
+│   └── Notification.java

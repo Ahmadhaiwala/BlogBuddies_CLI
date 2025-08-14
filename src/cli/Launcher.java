@@ -1,9 +1,9 @@
 package cli;
 
-import db.DBConnection;
-import services.UserAuthentication;
+import Model.User;
+import services.UserServices;
 
-import java.sql.Connection;
+import java.util.Date;
 import java.util.Scanner;
 import static cli.General.*;
 
@@ -11,18 +11,30 @@ public class Launcher {
     static Scanner sc= new Scanner(System.in);
 
     public static void main(String[] args) {
-        Connection con= DBConnection.getConnection();
+
         Scanner sc = new Scanner(System.in);
         int choice = 0;
+        printColorf("-----------------------------------------------------------------------------------------------------------------------------",PURPLE);
+        printColorf( "░▒▓███████▓▒░░▒▓█▓▒░      ░▒▓██████▓▒░ ░▒▓██████▓▒░       ░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░ \n" +
+                        "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ \n" +
+                        "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ \n" +
+                        "░▒▓███████▓▒░░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒▒▓███▓▒░      ░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░  \n" +
+                        "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░     \n" +
+                        "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░     \n" +
+                        "░▒▓███████▓▒░░▒▓████████▓▒░▒▓██████▓▒░ ░▒▓██████▓▒░       ░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓███████▓▒░   ░▒▓█▓▒░     "
+                , CYAN);
+        printColorf("-----------------------------------------------------------------------------------------------------------------------------",PURPLE);
+
+
+
+
+
 
         while (choice != 3) {
-            printColor("        ----------------", YELLOW);
-            printColor("        | BLOG BUDDIES |", YELLOW);
-            printColor("        ----------------", YELLOW);
+
+
             System.out.println(BLUE);
-            print("1. Login");
-            print("2. Sign Up");
-            print("3. Exit");
+            printBox("1.Login \n  2.Signup \n  3.exit",YELLOW);
             System.out.println(RESET);
 
             print("Enter choice: ");
@@ -39,7 +51,7 @@ public class Launcher {
                         signup();
                         break;
                     case 3:
-                        printColor("Goodbye 👋", CYAN);
+                        printColorf("Goodbye ", CYAN);
                         break;
                     default:
                         printColor("Only choices 1, 2, or 3 are valid!", RED);
@@ -60,8 +72,14 @@ public class Launcher {
        String username=sc.nextLine();
         printColor("Enter Password:",BLUE);
         String password=sc.nextLine();
-        if(UserAuthentication.authenticateUser(username,password)){
+        UserMenu a= new UserMenu();
+        if(UserServices.authenticateUser(username,password,a)){
             printColor("login Successfully",GREEN);
+
+            a.Home();
+        }
+        else{
+            printColor("Incorrect UserName or password please try again",RED);
         }
 
 
@@ -70,28 +88,32 @@ public class Launcher {
     }
 
     public static void signup() {
-        printColor("Signup functionality coming soon!", GREEN);
-    }
-    public void Home(){
-        print("enter choice:");
-        int choice=sc.nextInt();
-        while(choice!=3){
+        printColor("UserName:",BLUE);
+        String username=sc.nextLine();
+        printColor("Fullname:",BLUE);
 
+        String fullname=sc.nextLine();
+        printColor("Password:",BLUE);
+        String Password=sc.nextLine();
+
+
+        printColor("email:",BLUE);
+
+        String email=sc.nextLine();
+        while (!email.endsWith("@gmail.com")){
+            printColor("email:",BLUE);
+            email=sc.nextLine();
         }
+
+        printColor("bio:",BLUE);
+        String bio=sc.nextLine();
+        java.util.Date utilDate = new Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+        User u= new User(username, Password,  fullname,  email,  bio, sqlDate);
+        UserServices us= new UserServices();
+        us.insertNewUser(u);
     }
 
-    public void searchUser(){
-
-    }
-    public void ViewFriends(){
-        //To chat with them see there profile see there blog
-    }
-    public void PublicBlog(){
-
-    }
-    public void Inbox(){
-
-    }
-    public void PostBlog(){}
 
 }
