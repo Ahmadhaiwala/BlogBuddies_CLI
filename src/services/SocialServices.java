@@ -42,7 +42,7 @@ public class SocialServices {
                 Date date = rs.getDate("join_on");
                 int uid = rs.getInt("user_id");
 
-                User friend = new User( User_Name, password, fullName, emailid, bio, date);
+                User friend = new User(uid, User_Name, password, fullName, emailid, bio, date);
                 friendsList.add(friend);
             }
 

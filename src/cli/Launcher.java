@@ -32,7 +32,7 @@ public class Launcher {
 
 
 
-        while (choice != 3) {
+        while (choice != 4) {
 
 
             System.out.println(BLUE);
@@ -53,7 +53,7 @@ public class Launcher {
                         signup();
                         break;
                     case 3:about();
-                    break;
+                          break;
                     case 4:
                         printColorf("Goodbye ", CYAN);
                         break;

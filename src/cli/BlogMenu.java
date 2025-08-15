@@ -125,9 +125,20 @@ public class BlogMenu {
     void createBlog() {
         printColor(" Enter blog title:", BLUE);
         String title = sc.nextLine();
+        while(title.isEmpty()){
+            printColor("Empty field is'nt allowed mandatory fill",RED);
+            printColor(" Enter blog title:", BLUE);
+            title = sc.nextLine();
+        }
 
         printColor(" Enter blog content:", BLUE);
         String content = sc.nextLine();
+        while(content.isEmpty()){
+            printColor("Empty field is'nt allowed mandatory fill",RED);
+            printColor(" Enter blog content:", BLUE);
+            title = sc.nextLine();
+        }
+
 
         BlogServices.createBlog(currentUser.Userid, title, content);
         SocialServices s= new SocialServices();
