@@ -46,7 +46,7 @@ public class UserMenu {
             print("5. Logout");
             print("\uD83E\uDDD1 6. My Profile");
             print("\uD83D\uDC40 7. View Another User's Profile");
-            print("8. 📚 View History & Stats");
+            print("8. View History & Stats");
 
             System.out.println(RESET);
 

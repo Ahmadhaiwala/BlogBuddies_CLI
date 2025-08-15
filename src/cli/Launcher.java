@@ -6,6 +6,8 @@ import services.UserServices;
 import java.util.Date;
 import java.util.Scanner;
 import static cli.General.*;
+import static java.awt.Color.MAGENTA;
+import static java.awt.Color.ORANGE;
 
 public class Launcher {
     static Scanner sc= new Scanner(System.in);
@@ -34,7 +36,7 @@ public class Launcher {
 
 
             System.out.println(BLUE);
-            printBox("1.Login \n  2.Signup \n  3.exit",YELLOW);
+            printBox("1.Login \n  2.Signup \n  3.about \n 4.exit",YELLOW);
             System.out.println(RESET);
 
             print("Enter choice: ");
@@ -50,7 +52,9 @@ public class Launcher {
                     case 2:
                         signup();
                         break;
-                    case 3:
+                    case 3:about();
+                    break;
+                    case 4:
                         printColorf("Goodbye ", CYAN);
                         break;
                     default:
@@ -65,6 +69,42 @@ public class Launcher {
 
         sc.close();
     }
+    public static void about() {
+        // Big header
+        General.printSection("About This Project", General.BRIGHT_BLUE);
+
+        // Overview
+        General.printColor(" Overview:", General.BRIGHT_YELLOW);
+        General.print("This is a Java-based Social system integrated with MySQL.");
+        General.print("It allows viewing blog ");
+
+        // Core Highlights
+        General.printColor("\n Core Highlights:", General.BRIGHT_YELLOW);
+        General.printColor("• Fully database-driven using JDBC.", General.BRIGHT_CYAN);
+        General.printColor("• Object-Oriented design with service and model layers.", General.BRIGHT_CYAN);
+        General.printColor("• Modular code ready for expansion.", General.BRIGHT_CYAN);
+
+        // Tech Stack
+        General.printColor("\n🛠 Tech Stack:", General.BRIGHT_YELLOW);
+        General.printColor("• Java (Core Java, JDBC)", General.BRIGHT_PURPLE);
+        General.printColor("• MySQL (users table for persistent storage)", General.BRIGHT_PURPLE);
+        General.printColor("• CLI-based interface for user interaction", General.BRIGHT_PURPLE);
+
+        // Developer
+        General.printColor("\n Developer:", General.BRIGHT_YELLOW);
+        General.printColor("• Ahmad", General.BRIGHT_GREEN);
+        General.printColor("• Purpose: Strengthen Java + SQL skills while building a scalable application.", General.BRIGHT_GREEN);
+        General.printColor("• Smit", General.BRIGHT_GREEN);
+        General.printColor("• Purpose: Logic and data structure", General.BRIGHT_GREEN);
+        General.printColor("• Grensy", General.BRIGHT_GREEN);
+        General.printColor("• Purpose: Design", General.BRIGHT_GREEN);
+
+
+
+        System.out.println();
+        General.printBox(" End of Project Overview ", General.BRIGHT_BLUE);
+    }
+
 
     public static void login() {
 
@@ -88,19 +128,36 @@ public class Launcher {
     }
 
     public static void signup() {
+        UserServices us= new UserServices();
         printColor("UserName:",BLUE);
         String username=sc.nextLine();
+        while(us.isUserAlreadyThere(username)){
+            printColor("User already exist try another username!!!",RED);
+            printColor("UserName:",BLUE);
+            username=sc.nextLine();
+        }
         printColor("Fullname:",BLUE);
 
         String fullname=sc.nextLine();
         printColor("Password:",BLUE);
         String Password=sc.nextLine();
+        while(us.checkStrength(Password)<3){
+            printColor("please enter a password containing [A-Z],[a-z],Numbers",RED);
+            Password=sc.nextLine();
+        }
 
 
         printColor("email:",BLUE);
 
         String email=sc.nextLine();
-        while (!email.endsWith("@gmail.com")){
+        while (!email.endsWith("@gmail.com") || us.isEmailDuplicate(email)){
+            if(!email.endsWith("@gmail.com")){
+                printColor("Email should ends with @gmail.com ",RED);
+            }
+            if(us.isEmailDuplicate(email)){
+                printColor("Email is duplicate  ",RED);
+            }
+
             printColor("email:",BLUE);
             email=sc.nextLine();
         }
@@ -111,8 +168,15 @@ public class Launcher {
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
         User u= new User(username, Password,  fullname,  email,  bio, sqlDate);
-        UserServices us= new UserServices();
+
+
+
+
+
+
+        u= new User(username, Password,  fullname,  email,  bio, sqlDate);
         us.insertNewUser(u);
+
     }
 
 

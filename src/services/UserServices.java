@@ -63,9 +63,9 @@ public class UserServices {
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                General.printColor("Problem in getting sign up,please try again later",General.RED);
+                General.printColor("User success fully signed up please try to login now!!!!",General.GREEN);
             } else {
-                General.printColor("Thanks for using app Have a good day",General.GREEN);
+                General.printColor("Problem in getting sign up please contact developer",General.GREEN);
             }
 
         } catch (Exception e) {
@@ -98,6 +98,59 @@ public class UserServices {
         }
         return null;
     }
+    public  boolean isUserAlreadyThere(String username) {
+        String sql = "SELECT 1 FROM users WHERE username = ?";
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement pm = con.prepareStatement(sql)
+        ) {
+            pm.setString(1, username);
+            try (ResultSet rs = pm.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            General.printColor("Error in isUserAlreadyThere: " + e.getMessage(), General.RED);
+            return false;
+        }
+    }
+    public boolean isEmailDuplicate(String email) {
+        String sql = "SELECT 1 FROM users WHERE emailid = ?";
+        try (
+                Connection con = DBConnection.getConnection();
+                PreparedStatement pm = con.prepareStatement(sql)
+        ) {
+            pm.setString(1, email);
+            try (ResultSet rs = pm.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            General.printColor("Error in isEmailDuplicate: " + e.getMessage(), General.RED);
+        }
+        return false;
+    }
+
+    public int checkStrength(String password) {
+        if (password == null) return 0; // null safety
+
+        int score = 0;
+
+        // Length check
+        if (password.length() >= 8) score++;
+
+        // Has uppercase & lowercase
+        if (password.matches(".*[A-Z].*") && password.matches(".*[a-z].*")) score++;
+
+        // Has digit
+        if (password.matches(".*\\d.*")) score++;
+
+        // Has special character
+        if (password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) score++;
+
+        // Scoring: you can change this scale
+        // Weak: 0-1, Medium: 2-3, Strong: 4
+        return score;
+    }
+
 
 
     public static ArrayList<User> searchUser(String pattern) {
@@ -126,6 +179,6 @@ public class UserServices {
         } catch (Exception e) {
             General.printColor("Search error: " + e.getMessage(), General.RED);
         }
-        return ls; // Even if empty, never return null
+        return ls;
     }
 }

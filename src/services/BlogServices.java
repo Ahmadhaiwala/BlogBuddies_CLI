@@ -152,6 +152,8 @@ public class BlogServices {
 
     }
 
+
+
     public static void addComment(int blogId, int userId, String content) {
         String sql = "INSERT INTO comments (blog_id, user_id, content) VALUES (?, ?, ?)";
 
