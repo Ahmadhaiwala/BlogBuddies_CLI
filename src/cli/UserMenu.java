@@ -47,6 +47,7 @@ public class UserMenu {
             print("\uD83E\uDDD1 6. My Profile");
             print("\uD83D\uDC40 7. View Another User's Profile");
             print("8. View History & Stats");
+            print("9.Edit ur profile");
 
             System.out.println(RESET);
 
@@ -83,6 +84,10 @@ public class UserMenu {
                         break;
                     case 8 : viewStats();
                       break;
+                    case 9:
+                        editProfile();
+                        break;
+
 
 
 
@@ -132,14 +137,14 @@ public class UserMenu {
     public void viewStats() {
         printSection(" Your Activity", BLUE);
 
-        printColor("🕵 Last 5 Search Keywords:", CYAN);
+        printColor(" Last 5 Search Keywords:", CYAN);
         for (String keyword : searchHistory) {
             print("🔎 " + keyword);
         }
 
-        printColor("\n👤 Recently Viewed Profiles:", CYAN);
+        printColor("\nRecently Viewed Profiles:", CYAN);
         for (String user : recentlyViewedProfiles) {
-            print("👁️ " + user + " (viewed " + viewCounts.getOrDefault(user, 0) + " times)");
+            print(" " + user + " (viewed " + viewCounts.getOrDefault(user, 0) + " times)");
         }
     }
 
@@ -157,11 +162,41 @@ public class UserMenu {
         }
 
     }
+    public void editProfile() {
+        General.printColor("=== Edit Profile === [Leave blank to keep]", General.YELLOW);
+
+        Scanner sc = new Scanner(System.in);
+
+        General.printColor("Full Name [" + user.fullName + "]: ", General.BLUE);
+        String name = sc.nextLine();
+        if (!name.trim().isEmpty()) user.fullName = name;
+
+        General.printColor("Email [" + user.email + "]: ", General.BLUE);
+        String email = sc.nextLine();
+        if (!email.trim().isEmpty()) user.email = email;
+
+        General.printColor("Bio [" + user.bio + "]: ", General.BLUE);
+        String bio = sc.nextLine();
+        if (!bio.trim().isEmpty()) user.bio = bio;
+
+        General.printColor("Password  ", General.BLUE);
+        String pass = sc.nextLine();
+        if (!pass.trim().isEmpty()) user.Password = pass;
+
+        UserServices us = new UserServices();
+        if (us.updateUserProfile(user)) {
+            General.printColor("✅ Profile updated successfully!", General.GREEN);
+        } else {
+            General.printColor("❌ Failed to update profile!", General.RED);
+        }
+    }
+
+
     public void searchUser() {
         printColor("Enter UserName:", BLUE);
         String s = sc.nextLine();
 
-        // 🔄 Push search to history
+
         searchHistory.push(s);
 
         ArrayList<User> ls = UserServices.searchUser(s);

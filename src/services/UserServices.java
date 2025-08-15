@@ -72,6 +72,24 @@ public class UserServices {
             e.printStackTrace();
         }
     }
+    public static boolean updateUserProfile(User u) {
+        String sql = "UPDATE users SET fullname = ?, emailid = ?, bio = ?, user_password = ? WHERE user_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, u.fullName);
+            stmt.setString(2, u.email);
+            stmt.setString(3, u.bio);
+            stmt.setString(4, u.Password); // Ideally hash this
+            stmt.setInt(5, u.Userid);
+
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            General.printColor("Error updating profile: " + e.getMessage(), General.RED);
+        }
+        return false;
+    }
 
     public static User getUserByUsername(String username) {
         try {
