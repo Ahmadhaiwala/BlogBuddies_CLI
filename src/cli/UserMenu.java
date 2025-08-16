@@ -1,5 +1,7 @@
 package cli;
 
+import DS.SearchHistoryLinkedList;
+import DS.SearchStack;
 import Model.Notification;
 import Model.User;
 import services.NotificationServices;
@@ -21,12 +23,13 @@ import java.util.*;
 public class UserMenu {
     public User user;
     static Scanner sc = new Scanner(System.in);
-    Queue<Notification> inbox = new LinkedList<>();
 
 
 
-    Stack<String> searchHistory = new Stack<>();
-    LinkedList<String> recentlyViewedProfiles = new LinkedList<>();
+
+    SearchStack searchHistory = new SearchStack();  // your stack impl
+    SearchHistoryLinkedList recentlyViewedProfiles = new SearchHistoryLinkedList(); // your linkedlist impl
+
     HashMap<String, Integer> viewCounts = new HashMap<>();
 
 
@@ -138,12 +141,14 @@ public class UserMenu {
         printSection(" Your Activity", BLUE);
 
         printColor(" Last 5 Search Keywords:", CYAN);
-        for (String keyword : searchHistory) {
-            print("🔎 " + keyword);
+        ArrayList<String> history=searchHistory.getList();
+        for (String keyword : history) {
+            print(" " + keyword);
         }
 
         printColor("\nRecently Viewed Profiles:", CYAN);
-        for (String user : recentlyViewedProfiles) {
+        ArrayList<String> a=recentlyViewedProfiles.getList();
+        for (String user : a) {
             print(" " + user + " (viewed " + viewCounts.getOrDefault(user, 0) + " times)");
         }
     }
@@ -185,9 +190,9 @@ public class UserMenu {
 
         UserServices us = new UserServices();
         if (us.updateUserProfile(user)) {
-            General.printColor("✅ Profile updated successfully!", General.GREEN);
+            General.printColor(" Profile updated successfully!", General.GREEN);
         } else {
-            General.printColor("❌ Failed to update profile!", General.RED);
+            General.printColor(" Failed to update profile!", General.RED);
         }
     }
 

@@ -1,5 +1,6 @@
 package cli;
 
+import DS.StackInteger;
 import Model.User;
 import services.SocialServices;
 import services.UserServices;
@@ -14,7 +15,7 @@ import static cli.General.*;
 public class SocialMenu {
     User user;
     static Scanner sc = new Scanner(System.in);
-    Stack<Integer> undoStack = new Stack<>();
+    StackInteger undoStack = new StackInteger();
 
     public void FriendsMenu(User user) {
         this.user = user;
@@ -90,7 +91,7 @@ public class SocialMenu {
     public void sendFriendReq() {
         SocialServices fr = new SocialServices();
         printColor("Enter username to send friend request:", BLUE);
-        sc.nextLine(); // Clean input
+        sc.nextLine();
         String username = sc.nextLine();
 
         ArrayList<User> foundUsers = UserServices.searchUser(username);

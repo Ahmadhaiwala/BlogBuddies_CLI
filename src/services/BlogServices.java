@@ -25,11 +25,11 @@ public class BlogServices {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                printColor("✅ Blog created successfully!", GREEN);
+                printColor("Blog created successfully!", GREEN);
             }
 
         } catch (Exception e) {
-            printColor("❌ Error creating blog!", RED);
+            printColor(" Error creating blog!", RED);
             e.printStackTrace();
         }
     }
@@ -59,7 +59,7 @@ public class BlogServices {
             }
 
         } catch (Exception e) {
-            print("❌ Failed to load blogs.");
+            print(" Failed to load blogs.");
             e.printStackTrace();
         }
 
@@ -113,9 +113,9 @@ public class BlogServices {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                printColor("🗑️ Blog deleted successfully", GREEN);
+                printColor(" Blog deleted successfully", GREEN);
             } else {
-                printColor("⚠️ No blog deleted. Maybe it's not yours?", RED);
+                printColor(" No blog deleted. Maybe it's not yours?", RED);
             }
 
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class BlogServices {
             Date date = rs.getDate(6);
             int userId = rs.getInt(7);
 
-            return new User( User_Name, password, fullName, emailid, bio, date);
+            return new User( userId,User_Name, password, fullName, emailid, bio, date);
         }
        return null;
 
@@ -166,7 +166,7 @@ public class BlogServices {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                printColor("💬 Comment added!", CYAN);
+                printColor(" Comment added!", CYAN);
             }
 
         } catch (Exception e) {
@@ -240,7 +240,7 @@ public class BlogServices {
             }
 
         } catch (Exception e) {
-            print("❌ Failed to search blogs.");
+            print(" Failed to search blogs.");
             e.printStackTrace();
         }
 

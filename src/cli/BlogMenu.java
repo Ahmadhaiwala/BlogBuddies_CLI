@@ -1,5 +1,9 @@
 package cli;
 
+
+import java.util.ArrayList;
+import java.sql.SQLException;
+
 import Model.Blog;
 import Model.Comment;
 import Model.Notification;
@@ -8,8 +12,13 @@ import services.BlogServices;
 import services.NotificationServices;
 import services.SocialServices;
 
+import DS.BlogStack;
+import DS.BlogLinkedList;
+
+import static cli.General.*;
 import static services.BlogServices.getUserFromBlogId;
 import static services.NotificationServices.*;
+
 
 import java.sql.SQLException;
 import java.util.*;
@@ -22,8 +31,8 @@ public class BlogMenu {
      User currentUser;
 
 
-    Stack<Blog> blogHistory = new Stack<>();
-    LinkedList<Blog> recentSearchResults = new LinkedList<>();
+    BlogStack blogHistory = new BlogStack(50);   // capacity, can adjust
+    BlogLinkedList recentSearchResults = new BlogLinkedList();
     HashMap<Integer, String> userCache = new HashMap<>();
 
     public BlogMenu(User user) {
@@ -96,7 +105,8 @@ public class BlogMenu {
         }
 
         int i = 0;
-        for (Blog blog : recentSearchResults) {
+        ArrayList<Blog> rec=recentSearchResults.getList();
+        for (Blog blog : rec) {
             printColor(i + ". " + blog.title + " (by @" + blog.username + ")", GREEN);
             i++;
         }
@@ -210,7 +220,9 @@ public class BlogMenu {
             switch (choice) {
                 case "1" -> {
                     printColor("Type your comment:", BLUE);
+                    print(currentUser.Userid+"");
                     String comment = sc.nextLine();
+                    System.out.println(getUserFromBlogId(blog.blogId));
                     BlogServices.addComment(blog.blogId, currentUser.Userid, comment);
                     NotificationServices.addNotification(new Notification(getUserFromBlogId(blog.blogId).Userid,
 
