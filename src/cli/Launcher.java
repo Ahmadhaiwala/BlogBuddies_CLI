@@ -36,7 +36,7 @@ public class Launcher {
 
 
             System.out.println(BLUE);
-            printBox("1.Login \n  2.Signup \n  3.about \n 4.exit",YELLOW);
+            printBox("1.Login \n  2.Signup \n  3.about \n 4.adminlogin \n 5.exit",YELLOW);
             System.out.println(RESET);
 
             print("Enter choice: ");
@@ -47,19 +47,26 @@ public class Launcher {
 
                 switch (choice) {
                     case 1:
-                        login();
+                        login(); // normal user login
                         break;
                     case 2:
-                        signup();
+                        signup(); // signup
                         break;
-                    case 3:about();
-                          break;
+                    case 3:
+                        about();
+                        break;
                     case 4:
-                        printColorf("Goodbye ", CYAN);
+                        new AdminLogin().login(); // admin login
                         break;
+
+                    case 5:
+                        printColorf("Goodbye", CYAN);
+                        break;
+
                     default:
-                        printColor("Only choices 1, 2, or 3 are valid!", RED);
+                        printColor("Only choices 1-5 are valid!", RED);
                 }
+
             } catch (Exception e) {
                 printColor("Please enter a valid number!", RED);
             }
@@ -70,13 +77,14 @@ public class Launcher {
         sc.close();
     }
     public static void about() {
-        // Big header
+
         General.printSection("About This Project", General.BRIGHT_BLUE);
 
         // Overview
         General.printColor(" Overview:", General.BRIGHT_YELLOW);
         General.print("This is a Java-based Social system integrated with MySQL.");
         General.print("It allows viewing blog ");
+        General.print("Git:"+" https://github.com/Ahmadhaiwala/BlogBuddies_CLI.git");
 
         // Core Highlights
         General.printColor("\n Core Highlights:", General.BRIGHT_YELLOW);
@@ -85,9 +93,9 @@ public class Launcher {
         General.printColor("• Modular code ready for expansion.", General.BRIGHT_CYAN);
 
         // Tech Stack
-        General.printColor("\n🛠 Tech Stack:", General.BRIGHT_YELLOW);
+        General.printColor("\n Tech Stack:", General.BRIGHT_YELLOW);
         General.printColor("• Java (Core Java, JDBC)", General.BRIGHT_PURPLE);
-        General.printColor("• MySQL (users table for persistent storage)", General.BRIGHT_PURPLE);
+        General.printColor("• Postgres (users table for persistent storage)", General.BRIGHT_PURPLE);
         General.printColor("• CLI-based interface for user interaction", General.BRIGHT_PURPLE);
 
         // Developer

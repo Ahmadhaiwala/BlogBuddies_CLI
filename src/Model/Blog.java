@@ -6,7 +6,7 @@ import java.sql.Date;
 public class Blog {
     public int blogId;
     public int userId;
-    public String username; // ✔️ Added
+    public String username;
     public String title;
     public String content;
     public Date createdOn;
