@@ -28,7 +28,7 @@ public class SearchHistoryLinkedList {
         size = 0;
     }
 
-    // Add at end
+
     public void add(String data) {
         Node newNode = new Node(data);
         if (head == null) {

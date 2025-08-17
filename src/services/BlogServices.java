@@ -36,12 +36,7 @@ public class BlogServices {
 
     public static ArrayList<Blog> getAllBlogs() {
         ArrayList<Blog> blogs = new ArrayList<>();
-        String sql = """
-        SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on
-        FROM blogs b
-        JOIN users u ON b.user_id = u.user_id
-        ORDER BY b.created_on DESC
-    """;
+        String sql = " SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on FROM blogs b JOIN users u ON b.user_id = u.user_id ORDER BY b.created_on DESC";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -51,7 +46,7 @@ public class BlogServices {
                 blogs.add(new Blog(
                         rs.getInt("blog_id"),
                         rs.getInt("user_id"),
-                        rs.getString("username"),  // 👈 NEW
+                        rs.getString("username"),
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getDate("created_on")
@@ -69,13 +64,7 @@ public class BlogServices {
 
     public static ArrayList<Blog> getBlogsByUser(int userId) {
         ArrayList<Blog> blogs = new ArrayList<>();
-        String sql = """
-        SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on
-        FROM blogs b
-        JOIN users u ON b.user_id = u.user_id
-        WHERE b.user_id = ?
-        ORDER BY b.created_on DESC
-    """;
+        String sql = " SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on FROM blogs b JOIN users u ON b.user_id = u.user_id WHERE b.user_id = ? ORDER BY b.created_on DESC ";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -123,10 +112,7 @@ public class BlogServices {
         }
     }
     public static User getUserFromBlogId(int blogid) throws SQLException{
-        String sql= """ 
-                select  emailid, UserName, User_Password, fullname, bio, join_on, user_id  from users where 
-                user_id=(select user_id from blogs where blog_id=?)
-                """;
+        String sql= " select  emailid, UserName, User_Password, fullname, bio, join_on, user_id  from users where user_id=(select user_id from blogs where blog_id=?)";
         Connection con=DBConnection.getConnection();
         PreparedStatement pm = con.prepareStatement(
                 sql

@@ -14,7 +14,7 @@ public class User {
     public String email;
     public String bio;
     public Date joinedOn;
-    boolean isOnline;
+
     public User(String User_Name, String Password, String FullName, String email, String bio, Date joinedon){
         this.User_Name=User_Name;
         this.Password=Password;

@@ -41,16 +41,16 @@ public class UserMenu {
         while (true) {
             printSection("Home",PURPLE);
             System.out.println(BLUE);
-            print("\uD83D\uDC65 1. Friends Menu");
-            print("\uD83D\uDD0D 2. Search Users");
+            printColor("1. Friends Menu",BLUE);
+            printColor("2. Search Users",GREEN);
 
-            print("\uD83D\uDCE9 3.Blog Menu");
-            print("\uD83D\uDCE9 4. View Inbox");
-            print("5. Logout");
-            print("\uD83E\uDDD1 6. My Profile");
-            print("\uD83D\uDC40 7. View Another User's Profile");
-            print("8. View History & Stats");
-            print("9.Edit ur profile");
+            printColor("3.Blog Menu",YELLOW);
+            printColor("4. View Inbox",RED);
+            printColor("5. Logout",PURPLE);
+            printColor("6. My Profile",BRIGHT_YELLOW);
+            printColor("7. View Another User's Profile",BRIGHT_BLUE);
+            printColor("8. View History & Stats",BRIGHT_PURPLE);
+            printColor("9.Edit ur profile",BRIGHT_CYAN);
 
             System.out.println(RESET);
 
@@ -168,33 +168,55 @@ public class UserMenu {
 
     }
     public void editProfile() {
+        UserServices us = new UserServices();
         General.printColor("=== Edit Profile === [Leave blank to keep]", General.YELLOW);
 
         Scanner sc = new Scanner(System.in);
 
+
         General.printColor("Full Name [" + user.fullName + "]: ", General.BLUE);
-        String name = sc.nextLine();
-        if (!name.trim().isEmpty()) user.fullName = name;
+        String name = sc.nextLine().trim();
+        if (!name.isEmpty()) user.fullName = name;
+
 
         General.printColor("Email [" + user.email + "]: ", General.BLUE);
-        String email = sc.nextLine();
-        if (!email.trim().isEmpty()) user.email = email;
+        String email = sc.nextLine().trim();
+        if (!email.isEmpty()) {
+            while (!email.endsWith("@gmail.com") || us.isEmailDuplicate(email)) {
+                if (!email.endsWith("@gmail.com")) {
+                    printColor("Email must end with @gmail.com", RED);
+                } else {
+                    printColor("Email already registered!", RED);
+                }
+                email = sc.nextLine().trim();
+            }
+            user.email = email;
+        }
+
 
         General.printColor("Bio [" + user.bio + "]: ", General.BLUE);
-        String bio = sc.nextLine();
-        if (!bio.trim().isEmpty()) user.bio = bio;
+        String bio = sc.nextLine().trim();
+        if (!bio.isEmpty()) user.bio = bio;
 
-        General.printColor("Password  ", General.BLUE);
-        String pass = sc.nextLine();
-        if (!pass.trim().isEmpty()) user.Password = pass;
 
-        UserServices us = new UserServices();
+        General.printColor("Password: ", General.BLUE);
+        String pass = sc.nextLine().trim();
+        if (!pass.isEmpty()) {
+            while (us.checkStrength(pass) < 3) {
+                printColor("Please enter a stronger password containing [A-Z], [a-z], numbers, and symbols", RED);
+                pass = sc.nextLine().trim();
+            }
+            user.Password = pass;
+        }
+
+
         if (us.updateUserProfile(user)) {
             General.printColor(" Profile updated successfully!", General.GREEN);
         } else {
             General.printColor(" Failed to update profile!", General.RED);
         }
     }
+
 
 
     public void searchUser() {
@@ -232,13 +254,4 @@ public class UserMenu {
 
         NotificationServices.markAllAsSeen(user.Userid);
     }
-
-
-
-
-
-
-
-
-
 }
