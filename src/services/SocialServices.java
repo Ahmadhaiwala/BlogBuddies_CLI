@@ -21,7 +21,7 @@ public class SocialServices {
             Connection con = DBConnection.getConnection();
             if (con == null) {
                 print("Error occurred while getting DB connection");
-                return friendsList; // return empty list, not null
+                return friendsList;
             }
 
             String sql ="SELECT users.emailid, users.UserName, users.User_Password, users.fullname, users.bio, users.join_on, users.user_id\n" +

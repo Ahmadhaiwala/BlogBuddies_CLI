@@ -7,6 +7,8 @@ import cli.General;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class UserServices {
     User u;
@@ -148,24 +150,27 @@ public class UserServices {
     }
 
     public int checkStrength(String password) {
-        if (password == null) return 0; // null safety
+        if (password == null) return 0;
 
         int score = 0;
 
-        // Length check
+
+
+
+
+
         if (password.length() >= 8) score++;
 
-        // Has uppercase & lowercase
+
         if (password.matches(".*[A-Z].*") && password.matches(".*[a-z].*")) score++;
 
-        // Has digit
+
         if (password.matches(".*\\d.*")) score++;
 
-        // Has special character
+
         if (password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) score++;
 
-        // Scoring: you can change this scale
-        // Weak: 0-1, Medium: 2-3, Strong: 4
+
         return score;
     }
 

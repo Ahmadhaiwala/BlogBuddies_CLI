@@ -8,7 +8,7 @@ public class BlogLinkedList {
     class Node {
         Blog data;
         Node next;
-        Node prev; // for doubly linked list
+        Node prev;
 
         Node(Blog data) {
             this.data = data;

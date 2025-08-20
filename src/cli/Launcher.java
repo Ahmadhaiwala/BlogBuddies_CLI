@@ -24,7 +24,7 @@ public class Launcher {
                         "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░     \n" +
                         "░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░     \n" +
                         "░▒▓███████▓▒░░▒▓████████▓▒░▒▓██████▓▒░ ░▒▓██████▓▒░       ░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓███████▓▒░   ░▒▓█▓▒░     "
-                , CYAN);
+                , BRIGHT_WHITE);
         printColorf("-----------------------------------------------------------------------------------------------------------------------------",PURPLE);
 
 
@@ -47,21 +47,21 @@ public class Launcher {
 
                 switch (choice) {
                     case 1:
-                        login(); // normal user login
+                        login();
                         break;
                     case 2:
-                        signup(); // signup
+                        signup();
                         break;
                     case 3:
                         about();
                         break;
                     case 4:
-                        new AdminLogin().login(); // admin login
+                        new AdminLogin().login(args);
                         break;
 
                     case 5:
                         printColorf("Goodbye", CYAN);
-                        break;
+                        return;
 
                     default:
                         printColor("Only choices 1-5 are valid!", RED);
@@ -74,7 +74,7 @@ public class Launcher {
             System.out.println();
         }
 
-        sc.close();
+
     }
     public static void about() {
 
@@ -150,7 +150,7 @@ public class Launcher {
         printColor("Password:",BLUE);
         String Password=sc.nextLine();
         while(us.checkStrength(Password)<3){
-            printColor("please enter a password containing [A-Z],[a-z],Numbers",RED);
+            printColor("please enter a password containing [A-Z],[a-z],Numbers,Symbols",RED);
             Password=sc.nextLine();
         }
 
@@ -176,12 +176,6 @@ public class Launcher {
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
         User u= new User(username, Password,  fullname,  email,  bio, sqlDate);
-
-
-
-
-
-
         u= new User(username, Password,  fullname,  email,  bio, sqlDate);
         us.insertNewUser(u);
 

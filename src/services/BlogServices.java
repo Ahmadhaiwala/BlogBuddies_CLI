@@ -13,8 +13,8 @@ import static cli.General.*;
 
 public class BlogServices {
 
-    public static void createBlog(int userId, String title, String content) {
-        String sql = "INSERT INTO blogs (user_id, title, content) VALUES (?, ?, ?)";
+    public static void createBlog(int userId, String title, String content, String visibility) {
+        String sql = "INSERT INTO blogs (user_id, title, content, visibility) VALUES (?, ?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -22,10 +22,11 @@ public class BlogServices {
             ps.setInt(1, userId);
             ps.setString(2, title);
             ps.setString(3, content);
+            ps.setString(4, visibility);
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                printColor("Blog created successfully!", GREEN);
+                printColor("Blog created successfully! (" + visibility + ")", GREEN);
             }
 
         } catch (Exception e) {
@@ -34,9 +35,47 @@ public class BlogServices {
         }
     }
 
+
+    public static ArrayList<Blog> getAllPublicBlogs() {
+        ArrayList<Blog> blogs = new ArrayList<>();
+        String sql = "SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on FROM blogs b JOIN users u ON b.user_id = u.user_idWHERE b.visibility = 'public'ORDER BY b.created_on DESC";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                blogs.add(new Blog(
+                        rs.getInt("blog_id"),
+                        rs.getInt("user_id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getDate("created_on")
+                ));
+            }
+
+        } catch (Exception e) {
+            print(" Failed to load blogs.");
+            e.printStackTrace();
+        }
+
+        return blogs;
+    }
+
     public static ArrayList<Blog> getAllBlogs() {
         ArrayList<Blog> blogs = new ArrayList<>();
-        String sql = " SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on FROM blogs b JOIN users u ON b.user_id = u.user_id ORDER BY b.created_on DESC";
+        String sql = " SELECT \n" +
+                "    b.blog_id, \n" +
+                "    b.user_id, \n" +
+                "    u.username, \n" +
+                "    b.title, \n" +
+                "    b.content, \n" +
+                "    b.created_on \n" +
+                "FROM blogs b \n" +
+                "JOIN users u ON b.user_id = u.user_id \n" +
+                "WHERE b.visibility = 'public'\n" +
+                "ORDER BY b.created_on DESC;\n";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -62,14 +101,51 @@ public class BlogServices {
     }
 
 
-    public static ArrayList<Blog> getBlogsByUser(int userId) {
+    public static ArrayList<Blog> getBlogsByUser(int currentUserId, int userId) {
         ArrayList<Blog> blogs = new ArrayList<>();
-        String sql = " SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on FROM blogs b JOIN users u ON b.user_id = u.user_id WHERE b.user_id = ? ORDER BY b.created_on DESC ";
+        String sql = """
+            SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on, b.visibility
+            FROM blogs b
+            JOIN users u ON b.user_id = u.user_id
+            WHERE b.user_id = ?
+              AND (b.visibility = 'public' OR b.user_id = ?)
+            ORDER BY b.created_on DESC
+        """;
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
+            ps.setInt(2, currentUserId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                blogs.add(new Blog(
+                        rs.getInt("blog_id"),
+                        rs.getInt("user_id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getDate("created_on")
+                ));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return blogs;
+    }
+    public static ArrayList<Blog> getPrivateBlogsForUser(int currentUserId) {
+        ArrayList<Blog> blogs = new ArrayList<>();
+        String sql = " SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on FROM blogs b JOIN users u ON b.user_id = u.user_id JOIN friends f ON ( (f.user_id = b.user_id AND f.friend_id = ?) OR (f.friend_id = b.user_id AND f.user_id = ?)) WHERE b.visibility = 'private' ORDER BY b.created_on DESC ";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, currentUserId);
+            ps.setInt(2, currentUserId);
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -193,24 +269,16 @@ public class BlogServices {
 
         return comments;
     }
-    public static ArrayList<Blog> searchBlogs(String keyword) {
+    public static ArrayList<Blog> getVisibleBlogs(int currentUserId) throws SQLException {
+        String query = " SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on, b.visibility  FROM blogs b  JOIN users u ON b.user_id = u.user_id WHERE b.visibility = 'public'  OR b.user_id = ?  -- allow user to always see their own blogs OR (b.visibility = 'private' AND b.user_id IN ( SELECT f.friend_id FROM friends f WHERE f.user_id = ?)) ORDER BY b.created_on DESC ";
+
         ArrayList<Blog> blogs = new ArrayList<>();
 
-        String sql = """
-        SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on
-        FROM blogs b
-        JOIN users u ON b.user_id = u.user_id
-        WHERE b.title LIKE ? OR b.content LIKE ? OR u.username LIKE ?
-        ORDER BY b.created_on DESC
-    """;
-
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(query)) {
 
-            String likeQuery = "%" + keyword + "%";
-            ps.setString(1, likeQuery);
-            ps.setString(2, likeQuery);
-            ps.setString(3, likeQuery);
+            ps.setInt(1, currentUserId);
+            ps.setInt(2, currentUserId);
 
             ResultSet rs = ps.executeQuery();
 
@@ -221,7 +289,58 @@ public class BlogServices {
                         rs.getString("username"),
                         rs.getString("title"),
                         rs.getString("content"),
-                        rs.getDate("created_on")
+                        rs.getDate("created_on"),
+                        rs.getString("visibility")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return blogs;
+    }
+
+
+    public static ArrayList<Blog> searchBlogs(int userId, String keyword) {
+        ArrayList<Blog> blogs = new ArrayList<>();
+        String sql = """
+        SELECT b.blog_id, b.user_id, u.username, b.title, b.content, b.created_on, b.visibility
+        FROM blogs b
+        JOIN users u ON b.user_id = u.user_id
+        WHERE 
+            (
+                b.visibility = 'public'
+                OR b.user_id = ?  
+                OR (b.visibility = 'private' AND b.user_id IN (
+                        SELECT f.friend_id FROM friends f WHERE f.user_id = ?
+                ))
+            )
+            AND (u.username LIKE ? OR b.title LIKE ? OR b.content LIKE ?)
+        ORDER BY b.created_on DESC
+    """;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String likeQuery = "%" + keyword + "%";
+
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ps.setString(3, likeQuery);
+            ps.setString(4, likeQuery);
+            ps.setString(5, likeQuery);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                blogs.add(new Blog(
+                        rs.getInt("blog_id"),
+                        rs.getInt("user_id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getDate("created_on"),
+                        rs.getString("visibility") // don’t forget visibility
                 ));
             }
 
@@ -232,6 +351,7 @@ public class BlogServices {
 
         return blogs;
     }
+
 
 
 

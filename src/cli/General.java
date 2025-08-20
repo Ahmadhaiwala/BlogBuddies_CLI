@@ -21,7 +21,7 @@ public class General {
     public static final String BRIGHT_CYAN = "\033[96m";
     public static final String BRIGHT_WHITE = "\033[97m";
 
-    // === Slow Print ===
+
     public static void print(String s) {
         for (int i = 0; i < s.length(); i++) {
             System.out.print(s.charAt(i));
@@ -39,7 +39,7 @@ public class General {
         for (int i = 0; i < s.length(); i++) {
             System.out.print(s.charAt(i));
             try {
-                Thread.sleep(5);
+                Thread.sleep(2);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

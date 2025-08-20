@@ -11,8 +11,8 @@ public class BlogStack {
     ArrayList<Blog> ls;
     int top;
     int capacity;
-    public BlogStack(int size){
-         this.capacity=size;
+    public BlogStack(){
+
          ls= new ArrayList<>();
          top=-1;
      }
@@ -24,7 +24,8 @@ public class BlogStack {
      public Boolean isEmpty(){
         return  ls.isEmpty();
      }
-     public ArrayList<Blog> retuernList(){
+     public ArrayList<Blog> returnList()
+     {
         return ls;
      }
      public Blog pop(){

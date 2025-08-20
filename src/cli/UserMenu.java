@@ -27,8 +27,8 @@ public class UserMenu {
 
 
 
-    SearchStack searchHistory = new SearchStack();  // your stack impl
-    SearchHistoryLinkedList recentlyViewedProfiles = new SearchHistoryLinkedList(); // your linkedlist impl
+    SearchStack searchHistory = new SearchStack();
+    SearchHistoryLinkedList recentlyViewedProfiles = new SearchHistoryLinkedList();
 
     HashMap<String, Integer> viewCounts = new HashMap<>();
 
@@ -85,7 +85,8 @@ public class UserMenu {
                     case  7:ViewUserProfile();
 
                         break;
-                    case 8 : viewStats();
+
+                        case 8 : viewStats();
                       break;
                     case 9:
                         editProfile();
@@ -119,11 +120,11 @@ public class UserMenu {
 
 
         if (recentlyViewedProfiles.contains(username)) {
-            recentlyViewedProfiles.remove(username); // move to front
+            recentlyViewedProfiles.remove(username);
         }
         recentlyViewedProfiles.addFirst(username);
         if (recentlyViewedProfiles.size() > 5) {
-            recentlyViewedProfiles.removeLast(); // keep only last 5
+            recentlyViewedProfiles.removeLast(); 
         }
 
 
@@ -169,7 +170,7 @@ public class UserMenu {
     }
     public void editProfile() {
         UserServices us = new UserServices();
-        General.printColor("=== Edit Profile === [Leave blank to keep]", General.YELLOW);
+        General.printColor("--- Edit Profile --- [Leave blank to keep]", General.YELLOW);
 
         Scanner sc = new Scanner(System.in);
 

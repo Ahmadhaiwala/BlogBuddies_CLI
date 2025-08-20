@@ -29,7 +29,7 @@ public class SocialMenu {
                 printColor("3. View Incoming Friend Requests", YELLOW);
                 printColor("4. Remove Friend", GREEN);
                 printColor("5. Undo Last Friend Request", BLUE);
-                printColor("6. Back to Main Menu", YELLOW);  // 👈 NEW
+                printColor("6. Back to Main Menu", YELLOW);
 
 
                 print("Enter choice: ");
