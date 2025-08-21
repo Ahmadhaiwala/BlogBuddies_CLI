@@ -59,7 +59,7 @@ public class UserMenu {
 
             try {
 
-                choice = Integer.parseInt(sc.nextLine());
+                choice=sc.nextInt();
 
                 switch (choice) {
                     case 1:

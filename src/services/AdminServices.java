@@ -28,6 +28,38 @@ public class AdminServices {
             return false;
         }
     }
+    public static int getBlogAuthor(int blogId) {
+        String sql = "SELECT user_id FROM blogs WHERE blog_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setInt(1, blogId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // not found
+    }
+
+    public static int getCommentAuthor(int commentId) {
+        String sql = "SELECT user_id FROM comments WHERE comment_id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setInt(1, commentId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // not found
+    }
+
     public static ArrayList<User> getAllUsers() {
         ArrayList<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";

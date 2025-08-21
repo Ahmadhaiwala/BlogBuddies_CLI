@@ -11,6 +11,7 @@ import Model.User;
 
 import services.BlogServices;
 import services.NotificationServices;
+import services.ReportServices;
 import services.SocialServices;
 
 import DS.BlogStack;
@@ -50,17 +51,25 @@ public class BlogMenu {
 
             try {
                 switch (choice) {
-                    case 1 -> createBlog();
-                    case 2 -> viewAllBlogs();
-                    case 3 -> viewMyBlogs();
-                    case 4 -> deleteBlog();
-                    case 5 -> searchBlog();
-                    case 6 -> viewLastViewedBlog();
-                    case 7 -> {
+                    case 1 : createBlog();
+                    break;
+                    case 2 : viewAllBlogs();
+                    break;
+                    case 3 : viewMyBlogs();
+                    break;
+                    case 4 : deleteBlog();
+                    break;
+                    case 5 : searchBlog();
+                    break;
+                    case 6 : viewLastViewedBlog();
+                    break;
+                    case 7 : {
                         printColor(" Going back to main menu...", PURPLE);
                         return;
                     }
-                    default -> printColor(" Invalid choice. Try again.", RED);
+
+                    default : printColor(" Invalid choice. Try again.", RED);
+                    break;
                 }
             } catch (Exception e) {
                 printColor(" Invalid input! Please enter a number.", RED);
@@ -69,7 +78,7 @@ public class BlogMenu {
         } while (true);
     }
 
-    // View last viewed blog
+
     void viewLastViewedBlog() throws SQLException {
         if (blogHistory.isEmpty()) {
             printColor("No blogs in history yet!", RED);
@@ -79,7 +88,7 @@ public class BlogMenu {
         }
     }
 
-    // Search blogs
+
     void searchBlog() {
         printColor(" Enter keyword to search in blogs:", BLUE);
         String keyword = sc.nextLine();
@@ -155,7 +164,7 @@ public class BlogMenu {
         }
     }
 
-    // View all blogs (public + private of friends)
+
     void viewAllBlogs() throws SQLException {
         ArrayList<Blog> blogs = BlogServices.getVisibleBlogs(currentUser.Userid);
 
@@ -207,9 +216,10 @@ public class BlogMenu {
         printColor("------------------------------------", PURPLE);
 
         while (true) {
-            printColor("\n1.  Comment on this blog", CYAN);
+            printColor("\n1. Comment on this blog", CYAN);
             printColor("2. View comments", YELLOW);
-            printColor("3.  Back", RED);
+            printColor("3. Report this blog", RED);
+            printColor("4. Back", GREEN);
             print("Choose an option: ");
 
             String choice = sc.nextLine();
@@ -226,7 +236,8 @@ public class BlogMenu {
                     ));
                 }
                 case "2" -> viewCommentsForBlog(blog.blogId);
-                case "3" -> {
+                case "3" -> reportBlog(blog);
+                case "4" -> {
                     printColor(" Returning to blog list...", GREEN);
                     return;
                 }
@@ -235,7 +246,17 @@ public class BlogMenu {
         }
     }
 
-    // View my blogs (with visibility)
+    void reportBlog(Blog blog) {
+        printColor("Enter reason for reporting this blog:", RED);
+        String reason = sc.nextLine().trim();
+        if (reason.isEmpty()) {
+            printColor(" Report reason cannot be empty!", RED);
+            return;
+        }
+
+        ReportServices.addBlogReport( currentUser.Userid,blog.userId,blog.blogId, reason);
+        printColor(" Blog reported successfully!", GREEN);
+    }
     void viewMyBlogs() {
         ArrayList<Blog> blogs = BlogServices.getBlogsByUser(currentUser.Userid,currentUser.Userid);
 
@@ -276,7 +297,9 @@ public class BlogMenu {
 
         printColor(" Comments:", CYAN);
         for (Comment c : comments) {
-            String username = userCache.getOrDefault(c.userId, "User#" + c.userId);
+            String username = userCache.getOrDefault(c.userId, "anonymous");
+
+
             printColor("--------------------------", GREEN);
             printColor("Comment: " + c.content, BLUE);
             printColor("By: @" + username, PURPLE);

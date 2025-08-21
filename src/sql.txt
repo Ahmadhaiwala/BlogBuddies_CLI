@@ -1,4 +1,5 @@
+//chatfeature---
 
-create table users(
-emailid varchar,username varchar,fullname varchar,user_password varchar, bio varchar,join_on date
-)
+//no of req notify---
+//like with specific notification---
+//share blog->

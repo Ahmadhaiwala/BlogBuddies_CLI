@@ -7,6 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class NotificationServices {
+    public static void sendAdminNotification(int userId, String message) {
+        Notification n = new Notification(userId,"Admin",message);
+
+
+        addNotification(n);
+    }
 
     public static void addNotification(Notification n) {
         String sql = "INSERT INTO notifications (user_id, from_user, message) VALUES (?, ?, ?)";

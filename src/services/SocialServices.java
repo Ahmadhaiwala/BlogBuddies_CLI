@@ -95,7 +95,7 @@ public class SocialServices {
        NotificationServices.addNotification(n);
 
        String sql = "INSERT INTO friend_requests (sender_id, receiver_id) VALUES (?, ?)";
-       print(sql);
+
        try (Connection con = DBConnection.getConnection();
             PreparedStatement stmt = con.prepareStatement(sql)) {
 
